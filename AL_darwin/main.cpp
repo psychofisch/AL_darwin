@@ -12,7 +12,7 @@ std::ostream& operator<<(std::ostream& os, const Genome& g) {
 int main(int argc, char* argv[])
 {
 	MathSolver ms;
-	ms.setMode(MathSolver::MUPLUSLAMBDA);
+	//ms.setMode(MathSolver::MUPLUSLAMBDA);
 	//std::cout << "FitnessTest -> " << ms.Fitness(Genome(2, -1, 1, 0)) << std::endl;
 
 	RNGesus rng;

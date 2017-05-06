@@ -24,20 +24,22 @@ Genome MathSolver::Solve(Genome& genome)
 {
 	Genome result = genome;
 
-	switch (m_mode)
-	{
-	case ONEPLUSONE: 
-		m_functionPtr = &MathSolver::i_onePlusOne;
-		break;
-	default:
-		break;
-	}
-
 	bool solution = false;
 	int cnt = 0;
 	for(int i = 0; i < m_iterationLimit; ++i)
 	{
-		result = (this->*m_functionPtr)(result);
+		switch (m_mode)
+		{
+		case ONEPLUSONE:
+			result = i_onePlusOne(result);
+			break;
+		/*case MUCOMMALAMDA:
+			result = i_muPlusLambda(result);
+			break;*/
+		default:
+			break;
+		}
+
 		int fitness = Fitness(result);
 		if (fitness == 0)
 		{
@@ -76,17 +78,16 @@ void MathSolver::setSeed(const unsigned long seed)
 Genome MathSolver::i_onePlusOne(Genome& g)
 {
 	Genome child[2] = { g, g };
-	int fitness[2] = { INT_MAX, INT_MAX };
 
 	for (int i = 0; i < 2; ++i)
 	{
 		child[i] = i_mutate(child[i]);
 
 		if(child[i].a >= child[i].b)	//solution requirement: a > b 
-			fitness[i] = Fitness(child[i]);
+			child[i].fitness = Fitness(child[i]);
 	}
 
-	if (fitness[0] < fitness[1])
+	if (child[0].fitness < child[1].fitness)
 		return child[0];
 	else
 		return child[1];

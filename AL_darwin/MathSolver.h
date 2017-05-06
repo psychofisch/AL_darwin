@@ -12,11 +12,12 @@ namespace Math{
 
 struct Genome {
 	Genome(int px, int py, int pa, int pb)
+		:x(px),
+		y(py),
+		a(pa),
+		b(pb),
+		fitness(INT_MAX)
 	{
-		x = px;
-		y = py;
-		a = pa;
-		b = pb;
 	}
 
 	Genome(Genome& g)
@@ -29,7 +30,7 @@ struct Genome {
 	{
 	}
 
-	int x, y, a, b;
+	int x, y, a, b, fitness;
 };
 
 class MathSolver
@@ -48,8 +49,6 @@ public:
 
 private:
 	MODE m_mode;
-	typedef Genome(MathSolver::*MathSolverMemberFunctPtr)(Genome& g);
-	MathSolverMemberFunctPtr m_functionPtr;
 	RNGesus m_rng;
 	int m_iterationLimit;
 
