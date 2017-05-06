@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 
 #include "MathSolver.h"
 
@@ -12,7 +13,7 @@ std::ostream& operator<<(std::ostream& os, const Genome& g) {
 int main(int argc, char* argv[])
 {
 	MathSolver ms;
-	//ms.setMode(MathSolver::MUPLUSLAMBDA);
+	ms.setDebug(false);
 	//std::cout << "FitnessTest -> " << ms.Fitness(Genome(2, -1, 1, 0)) << std::endl;
 
 	RNGesus rng;
@@ -24,26 +25,55 @@ int main(int argc, char* argv[])
 	}
 	std::cout << a << ":" << 1000-a << std::endl;*/
 
-	for (int i = 0; i < 10; ++i)
+	int sampleSize = 10;
+	Genome result;
+
+	while (1)
 	{
-		ms.setSeed(rng.GetNumber());
+		ms.setSeed(time(NULL));
 
-		Genome testGene, result;
-		unsigned int margin = 1000,
-			half;
-		half = margin / 2;
+		ms.setMode(MathSolver::ONEPLUSONE);
+		long steps = 0;
+		for (int i = 0; i < sampleSize; ++i)
+		{
+			//ms.setSeed(rng.GetNumber());
+			steps += ms.Solve(&result);
+		}
 
-		testGene.b = rng.GetZeroToOne() * margin - half;
-		testGene.x = rng.GetZeroToOne() * margin - half;
-		testGene.y = rng.GetZeroToOne() * margin - half;
-		testGene.b = rng.GetZeroToOne() * margin - half;
+		if (result.fitness == 0)
+			std::cout << "ONEPLUSONE average steps: " << steps / sampleSize << std::endl;
+		else
+			std::cout << "ONEPLUSONE couldn't find any solution..." << std::endl;
 
-		std::cout << "#####\n" << testGene << std::endl;
+		ms.setMode(MathSolver::MUPLUSLAMBDA);
+		ms.setMu(10);
+		ms.setLambda(20);
+		steps = 0;
+		for (int i = 0; i < sampleSize; ++i)
+		{
+			//ms.setSeed(rng.GetNumber());
+			steps += ms.Solve(&result);
+		}
 
-		result = ms.Solve(testGene);
+		if (result.fitness == 0)
+			std::cout << "MUPLUSLAMBDA average steps: " << steps / sampleSize << std::endl;
+		else
+			std::cout << "MUPLUSLAMBDA couldn't find any solution..." << std::endl;
 
-		std::cout << result << "\n#####" << std::endl;
+		ms.setMu(20);
+		ms.setLambda(10);
+		steps = 0;
+		for (int i = 0; i < sampleSize; ++i)
+		{
+			//ms.setSeed(rng.GetNumber());
+			steps += ms.Solve(&result);
+		}
+
+		if (result.fitness == 0)
+			std::cout << "MUPLUSLAMBDA average steps: " << steps / sampleSize << std::endl;
+		else
+			std::cout << "MUPLUSLAMBDA couldn't find any solution..." << std::endl;
+
+		std::cin.ignore();
 	}
-
-	std::cin.ignore();
 }
