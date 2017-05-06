@@ -45,7 +45,7 @@ int MathSolver::Solve(Genome* output)
 				result = getRandomGenome(m_limit);
 			result = i_onePlusOne(result, mutateParam);
 		}
-		else if (m_mode == MUPLUSLAMBDA)
+		else if (m_mode == MUPLUSLAMBDA || m_mode == MUCOMMALAMDA)
 		{
 			if (i == 0)
 			{
@@ -58,7 +58,10 @@ int MathSolver::Solve(Genome* output)
 			}
 
 			//int mutateParam = std::round(float(m_limit) *(1.0 - (i / m_iterationLimit)));
-			i_muPlusLambda(population, mutateParam);
+			if(m_mode == MUPLUSLAMBDA)
+				i_muPlusLambda(population, mutateParam);
+			else
+				i_muCommaLambda(population, mutateParam);
 
 			result = population[0];
 
@@ -174,22 +177,25 @@ void MathSolver::i_muPlusLambda(Genome* g, int mutateParam)
 	std::qsort(g, m_mu + m_lambda, sizeof(Genome), Math::GenomeCompare);
 }
 
-void MathSolver::i_muLambda(Genome * g, int mutateParam)
+void MathSolver::i_muCommaLambda(Genome * population, int mutateParam)
 {
 	for (uint i = m_mu; i < m_mu + m_lambda; ++i)
 	{
 		//uint r = int(m_mu * m_rng.GetZeroToOne());
 		uint r = i%m_mu;
-		g[i] = i_mutateWith(g[r], mutateParam);
+		population[i] = i_mutateWith(population[r], mutateParam);
+		if (population[i].a > population[i].b)
+			population[i].fitness = Fitness(population[i]);
 	}
 
-	for (uint i = 0; i < m_mu + m_lambda; ++i)
-	{
-		if (g[i].a > g[i].b)
-			g[i].fitness = Fitness(g[i]);
-	}
+	int offset = 0;
+	if (m_mode == MUCOMMALAMDA)
+		offset = m_mu;
 
-	std::qsort(g, m_mu + m_lambda, sizeof(Genome), Math::GenomeCompare);
+	std::qsort(population + offset, m_mu + m_lambda - offset, sizeof(Genome), Math::GenomeCompare);
+
+	if (m_mode == MUCOMMALAMDA)
+		memcpy(population, population + offset, sizeof(Genome) * m_mu);
 }
 
 Genome MathSolver::i_mutate(Genome& g)

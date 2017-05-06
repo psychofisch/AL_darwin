@@ -30,7 +30,7 @@ void testing(MathSolver& ms, int sampleSize, Genome& result)
 	}
 	watch.stop();
 
-	std::cout << "average steps: " << steps / (sampleSize - lostRate) << std::endl;
+	std::cout << "average steps: " << ((steps > 0)?(steps / (sampleSize - lostRate)):steps) << std::endl;
 	std::cout << "time: " << watch.getDurationString(0) << std::endl;
 	std::cout << "lostrate: " << float(lostRate) / sampleSize * 100.f << "%" << std::endl;
 	std::cout << "*******\n";
@@ -51,30 +51,30 @@ int main(int argc, char* argv[])
 	{
 		watch = Stopwatch();
 		//ms.setSeed(time(NULL));
-		ms.setSeed(0);
+		ms.setSeed(2);
 
 		std::cout << "*******\n1+1\n";
 		watch.start();
 		ms.setMode(MathSolver::ONEPLUSONE);
 		testing(ms, sampleSize, result);
 
-		std::cout << "*******\n1+1 with Mu+Lambda\n";
+		/*std::cout << "*******\n1+1 with Mu+Lambda\n";
 		ms.setMode(MathSolver::MUPLUSLAMBDA);
 		ms.setMu(1);
 		ms.setLambda(1);
-		testing(ms, sampleSize, result);
+		testing(ms, sampleSize, result);*/
 
 		std::cout << "*******\nMu+Lambda\n";
-		ms.setMode(MathSolver::MUPLUSLAMBDA);
-		ms.setMu(10);
-		ms.setLambda(100);
-		testing(ms, sampleSize, result);
-
-		std::cout << "*******\nMu,Lambda\n";
 		ms.setMode(MathSolver::MUCOMMALAMDA);
 		ms.setMu(10);
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
+
+		/*std::cout << "*******\nMu,Lambda\n";
+		ms.setMode(MathSolver::MUCOMMALAMDA);
+		ms.setMu(10);
+		ms.setLambda(100);
+		testing(ms, sampleSize, result);*/
 
 		std::cin.ignore();
 	}

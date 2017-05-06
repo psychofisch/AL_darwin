@@ -61,7 +61,7 @@ private:
 
 	Genome i_onePlusOne(Genome& g, int mutateParam);
 	void i_muPlusLambda(Genome* g, int mutateParam);
-	void i_muLambda(Genome* g, int mutateParam);
+	void i_muCommaLambda(Genome* g, int mutateParam);
 	Genome i_mutate(Genome& g);
 	Genome i_mutateWith(Genome& g, int margin);
 };
