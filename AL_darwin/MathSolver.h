@@ -59,9 +59,10 @@ private:
 	bool m_debug;
 	uint m_limit;
 
-	Genome i_onePlusOne(Genome& g);
-	void i_muPlusLambda(Genome* g);
+	Genome i_onePlusOne(Genome& g, int mutateParam);
+	void i_muPlusLambda(Genome* g, int mutateParam);
+	void i_muLambda(Genome* g, int mutateParam);
 	Genome i_mutate(Genome& g);
-	Genome i_mutateWith(Genome& g, uint margin);
+	Genome i_mutateWith(Genome& g, int margin);
 };
 
