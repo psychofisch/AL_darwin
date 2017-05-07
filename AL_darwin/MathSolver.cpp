@@ -11,7 +11,9 @@ MathSolver::MathSolver(MODE m)
 	m_debug(false),
 	m_mu(10),
 	m_lambda(10),
-	m_limit(100)
+	m_limit(100),
+	m_exact(PLUS),
+	m_inherit(NONE)
 {
 }
 
@@ -22,6 +24,16 @@ MathSolver::~MathSolver()
 void MathSolver::setMode(MODE m)
 {
 	m_mode = m;
+}
+
+void MathSolver::setExactly(EXACTLY e)
+{
+	m_exact = e;
+}
+
+void MathSolver::setInheritance(INHERIT i)
+{
+	m_inherit = i;
 }
 
 int MathSolver::Solve(Genome* output)
@@ -37,7 +49,7 @@ int MathSolver::Solve(Genome* output)
 		/*if (mutateParam > 10)
 			mutateParam /= 2;
 		else*/
-			mutateParam = 10;
+			mutateParam = 5;
 
 		if (m_mode == ONEPLUSONE)
 		{
@@ -45,7 +57,7 @@ int MathSolver::Solve(Genome* output)
 				result = getRandomGenome(m_limit);
 			result = i_onePlusOne(result, mutateParam);
 		}
-		else if (m_mode == MUPLUSLAMBDA || m_mode == MUCOMMALAMBDA)
+		else if (m_mode == MULAMBDA)
 		{
 			if (i == 0)
 			{
@@ -54,6 +66,7 @@ int MathSolver::Solve(Genome* output)
 				for (uint j = 0; j < m_mu; ++j)
 				{
 					population[j] = getRandomGenome(m_limit);
+					population[j].fitness = Fitness(population[i]);
 				}
 			}
 
@@ -130,18 +143,18 @@ void MathSolver::setLimit(uint l)
 Genome MathSolver::getRandomGenome(uint limit)
 {
 	Genome g;
-	uint half;
-	half = limit / 2;
+	//uint half;
+	//half = limit / 2;
 
-	g.x = int(m_rng.GetZeroToOne() * limit - half);
-	g.y = int(m_rng.GetZeroToOne() * limit - half);
-	g.a = int(m_rng.GetZeroToOne() * limit - half);
-	g.b = int(m_rng.GetZeroToOne() * limit - half);
+	g.x = int(m_rng.GetZeroToOne() * limit * 2 - limit);
+	g.y = int(m_rng.GetZeroToOne() * limit * 2 - limit);
+	g.a = int(m_rng.GetZeroToOne() * limit * 2 - limit);
+	g.b = int(m_rng.GetZeroToOne() * limit * 2 - limit);
 
 	return g;
 }
 
-Genome MathSolver::i_onePlusOne(Genome& g, int mutateParam)
+Genome MathSolver::i_onePlusOne(const Genome& g, int mutateParam)
 {
 	Genome child[2] = { g, g };
 
@@ -179,22 +192,41 @@ Genome MathSolver::i_onePlusOne(Genome& g, int mutateParam)
 
 void MathSolver::i_muLambda(Genome * population, int mutateParam)
 {
+	Genome tmpGenome;
 	for (uint i = m_mu; i < m_mu + m_lambda; ++i)
 	{
-		//uint r = int(m_mu * m_rng.GetZeroToOne());
-		uint r = i%m_mu;
-		population[i] = i_mutateWith(population[r], mutateParam);
-		if (population[i].a > population[i].b)
-			population[i].fitness = Fitness(population[i]);
+		uint r = int(m_mu * m_rng.GetZeroToOne());
+
+		if (m_exact == NONE)
+			tmpGenome = population[r];
+		else if (m_exact == COMBINE)
+		{
+			tmpGenome = population[r];
+			r = int(m_mu * m_rng.GetZeroToOne());
+			tmpGenome = i_combine(tmpGenome, population[r]);
+		}
+		else if (m_exact == BLEND)
+		{
+			tmpGenome = population[r];
+			r = int(m_mu * m_rng.GetZeroToOne());
+			tmpGenome = i_blend(tmpGenome, population[r]);
+		}
+
+		tmpGenome = i_mutateWith(tmpGenome, mutateParam);
+
+		if (tmpGenome.a >tmpGenome.b)
+			tmpGenome.fitness = Fitness(tmpGenome);
+
+		population[i] = tmpGenome;
 	}
 
 	int offset = 0;
-	if (m_mode == MUCOMMALAMBDA)
+	if (m_exact == COMMA)
 		offset = m_mu;
 
 	std::qsort(population + offset, m_mu + m_lambda - offset, sizeof(Genome), Math::GenomeCompare);
 
-	if (m_mode == MUCOMMALAMBDA)
+	if (m_exact == COMMA)
 		memcpy(population, population + offset, sizeof(Genome) * m_mu);
 }
 
@@ -207,13 +239,36 @@ Genome MathSolver::i_mutateWith(Genome & g, int margin)
 {
 	Genome gMutated = g;
 
-	int half = margin / 2;
-	gMutated.x += std::round(m_rng.GetZeroToOne())*(m_rng.GetZeroToOne() * margin - half);
-	gMutated.y += std::round(m_rng.GetZeroToOne())*(m_rng.GetZeroToOne() * margin - half);
-	gMutated.a += std::round(m_rng.GetZeroToOne())*(m_rng.GetZeroToOne() * margin - half);
-	gMutated.b += std::round(m_rng.GetZeroToOne())*(m_rng.GetZeroToOne() * margin - half);
+	gMutated.x += /*std::round(m_rng.GetZeroToOne())**/(m_rng.GetZeroToOne() * margin * 2 - margin);
+	gMutated.y += /*std::round(m_rng.GetZeroToOne())**/(m_rng.GetZeroToOne() * margin * 2 - margin);
+	gMutated.a += /*std::round(m_rng.GetZeroToOne())**/(m_rng.GetZeroToOne() * margin * 2 - margin);
+	gMutated.b += /*std::round(m_rng.GetZeroToOne())**/(m_rng.GetZeroToOne() * margin * 2 - margin);
 
 	return gMutated;
+}
+
+Genome MathSolver::i_combine(const Genome & gLeft, const Genome & gRight)
+{
+	Genome result;
+
+	result.x = (m_rng.GetZeroToOne() > 0.5f) ? gLeft.x : gRight.x;
+	result.y = (m_rng.GetZeroToOne() > 0.5f) ? gLeft.y : gRight.y;
+	result.a = (m_rng.GetZeroToOne() > 0.5f) ? gLeft.a : gRight.a;
+	result.b = (m_rng.GetZeroToOne() > 0.5f) ? gLeft.b : gRight.b;
+
+	return result;
+}
+
+Genome MathSolver::i_blend(const Genome & gLeft, const Genome & gRight)
+{
+	Genome result;
+
+	result.x = int((gLeft.x + gRight.x) * 0.5);
+	result.y = int((gLeft.y + gRight.y) * 0.5);
+	result.a = int((gLeft.a + gRight.a) * 0.5);
+	result.b = int((gLeft.b + gRight.b) * 0.5);
+
+	return result;
 }
 
 int Math::powi(int base, uint exponent)

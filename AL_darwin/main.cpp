@@ -39,11 +39,11 @@ void testing(MathSolver& ms, int sampleSize, Genome& result)
 int main(int argc, char* argv[])
 {
 	MathSolver ms;
-	ms.setDebug(true);
-	ms.setLimit(1000);
+	ms.setDebug(false);
+	ms.setLimit(100);
 
 	RNGesus rng;
-	int sampleSize = 10;
+	int sampleSize = 100;
 	Genome result;
 	Stopwatch watch;
 
@@ -56,22 +56,42 @@ int main(int argc, char* argv[])
 		/*std::cout << "*******\n1+1\n";
 		watch.start();
 		ms.setMode(MathSolver::ONEPLUSONE);
-		testing(ms, sampleSize, result);*/
+		testing(ms, sampleSize, result);
 
-		/*std::cout << "*******\n1+1 with Mu+Lambda\n";
-		ms.setMode(MathSolver::MUPLUSLAMBDA);
+		std::cout << "*******\n1+1 with Mu+Lambda\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::PLUS);
 		ms.setMu(1);
 		ms.setLambda(1);
-		testing(ms, sampleSize, result);*/
+		testing(ms, sampleSize, result);
 
 		std::cout << "*******\nMu+Lambda\n";
-		ms.setMode(MathSolver::MUPLUSLAMBDA);
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::PLUS);
+		ms.setMu(10);
+		ms.setLambda(100);
+		testing(ms, sampleSize, result);*/
+		std::cout << "samplesize: " << sampleSize << std::endl;
+
+		std::cout << "*******\nMu,Lambda\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::COMMA);
 		ms.setMu(10);
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
 
-		std::cout << "*******\nMu,Lambda\n";
-		ms.setMode(MathSolver::MUCOMMALAMBDA);
+		std::cout << "*******\nMu,Lambda COMBINE\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::COMMA);
+		ms.setInheritance(MathSolver::COMBINE);
+		ms.setMu(10);
+		ms.setLambda(100);
+		testing(ms, sampleSize, result);
+
+		std::cout << "*******\nMu,Lambda BLEND\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::COMMA);
+		ms.setInheritance(MathSolver::BLEND);
 		ms.setMu(10);
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
