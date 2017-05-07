@@ -172,24 +172,6 @@ Genome MathSolver::i_onePlusOne(const Genome& g, int mutateParam)
 		return child[1];
 }
 
-//void MathSolver::i_muPlusLambda(Genome* g, int mutateParam)
-//{
-//	for (uint i = m_mu; i < m_mu + m_lambda; ++i)
-//	{
-//		//uint r = int(m_mu * m_rng.GetZeroToOne());
-//		uint r = i%m_mu;
-//		g[i] = i_mutateWith(g[r], mutateParam);
-//	}
-//
-//	for (uint i = 0; i < m_mu + m_lambda; ++i)
-//	{
-//		if(g[i].a > g[i].b)
-//			g[i].fitness = Fitness(g[i]);
-//	}
-//
-//	std::qsort(g, m_mu + m_lambda, sizeof(Genome), Math::GenomeCompare);
-//}
-
 void MathSolver::i_muLambda(Genome * population, int mutateParam)
 {
 	Genome tmpGenome;
@@ -197,19 +179,19 @@ void MathSolver::i_muLambda(Genome * population, int mutateParam)
 	{
 		uint r = int(m_mu * m_rng.GetZeroToOne());
 
-		if (m_exact == NONE)
-			tmpGenome = population[r];
-		else if (m_exact == COMBINE)
+		tmpGenome = population[r];
+		if (m_exact != NONE)
 		{
 			tmpGenome = population[r];
 			r = int(m_mu * m_rng.GetZeroToOne());
-			tmpGenome = i_combine(tmpGenome, population[r]);
-		}
-		else if (m_exact == BLEND)
-		{
-			tmpGenome = population[r];
-			r = int(m_mu * m_rng.GetZeroToOne());
-			tmpGenome = i_blend(tmpGenome, population[r]);
+			if (m_exact == COMBINE)
+			{
+				tmpGenome = i_combine(tmpGenome, population[r]);
+			}
+			else if (m_exact == BLEND)
+			{
+				tmpGenome = i_blend(tmpGenome, population[r]);
+			}
 		}
 
 		tmpGenome = i_mutateWith(tmpGenome, mutateParam);
