@@ -53,10 +53,10 @@ int main(int argc, char* argv[])
 		//ms.setSeed(time(NULL));
 		ms.setSeed(2);
 
-		std::cout << "*******\n1+1\n";
+		/*std::cout << "*******\n1+1\n";
 		watch.start();
 		ms.setMode(MathSolver::ONEPLUSONE);
-		testing(ms, sampleSize, result);
+		testing(ms, sampleSize, result);*/
 
 		/*std::cout << "*******\n1+1 with Mu+Lambda\n";
 		ms.setMode(MathSolver::MUPLUSLAMBDA);
@@ -65,16 +65,16 @@ int main(int argc, char* argv[])
 		testing(ms, sampleSize, result);*/
 
 		std::cout << "*******\nMu+Lambda\n";
-		ms.setMode(MathSolver::MUCOMMALAMDA);
+		ms.setMode(MathSolver::MUPLUSLAMBDA);
 		ms.setMu(10);
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
 
-		/*std::cout << "*******\nMu,Lambda\n";
-		ms.setMode(MathSolver::MUCOMMALAMDA);
+		std::cout << "*******\nMu,Lambda\n";
+		ms.setMode(MathSolver::MUCOMMALAMBDA);
 		ms.setMu(10);
 		ms.setLambda(100);
-		testing(ms, sampleSize, result);*/
+		testing(ms, sampleSize, result);
 
 		std::cin.ignore();
 	}
