@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 
 		std::cout << "samplesize: " << sampleSize << std::endl;
 
-		std::cout << "*******\n1+1\n";
+		/*std::cout << "*******\n1+1\n";
 		watch.start();
 		ms.setMode(MathSolver::ONEPLUSONE);
 		testing(ms, sampleSize, result);
@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 		ms.setExactly(MathSolver::PLUS);
 		ms.setMu(1);
 		ms.setLambda(1);
-		testing(ms, sampleSize, result);
+		testing(ms, sampleSize, result);*/
 
 		std::cout << "*******\nMu+Lambda\n";
 		ms.setMode(MathSolver::MULAMBDA);
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
 
-		std::cout << "*******\nMu,Lambda\n";
+		/*std::cout << "*******\nMu,Lambda\n";
 		ms.setMode(MathSolver::MULAMBDA);
 		ms.setExactly(MathSolver::COMMA);
 		ms.setMu(10);
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 		ms.setInheritance(MathSolver::BLEND);
 		ms.setMu(10);
 		ms.setLambda(100);
-		testing(ms, sampleSize, result);
+		testing(ms, sampleSize, result);*/
 
 		std::cin.ignore();
 	}
