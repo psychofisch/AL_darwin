@@ -2,6 +2,7 @@
 #include <ctime>
 
 #include "MathSolver.h"
+#include "NQueens.h"
 #include "Stopwatch.h"
 
 std::ostream& operator<<(std::ostream& os, const Genome& g) {
@@ -9,6 +10,17 @@ std::ostream& operator<<(std::ostream& os, const Genome& g) {
 		/*<< "y: "*/ << g.y << ","
 		/*<< "a: "*/ << g.a << ","
 		/*<< "b:" */ << g.b;
+}
+
+std::ostream& operator<<(std::ostream& os, const Queenome& q) {
+	for (int i = 0; i < 4; ++i)
+	{
+		os << q.data[i];
+		if (i < 3)
+			os << ", ";
+	}
+
+	return os;
 }
 
 void testing(MathSolver& ms, int sampleSize, Genome& result)
@@ -43,61 +55,67 @@ int main(int argc, char* argv[])
 	ms.setLimit(100);
 
 	RNGesus rng;
-	int sampleSize = 100;
-	Genome result;
-	Stopwatch watch;
+	//int sampleSize = 100;
+	//Genome result;
+	//Stopwatch watch;
 
-	while (1)
-	{
-		watch = Stopwatch();
-		//ms.setSeed(time(NULL));
-		ms.setSeed(2);
+	//while (1)
+	//{
+	//	watch = Stopwatch();
+	//	//ms.setSeed(time(NULL));
+	//	ms.setSeed(2);
 
-		std::cout << "samplesize: " << sampleSize << std::endl;
+	//	std::cout << "samplesize: " << sampleSize << std::endl;
 
-		/*std::cout << "*******\n1+1\n";
-		watch.start();
-		ms.setMode(MathSolver::ONEPLUSONE);
-		testing(ms, sampleSize, result);
+	//	/*std::cout << "*******\n1+1\n";
+	//	watch.start();
+	//	ms.setMode(MathSolver::ONEPLUSONE);
+	//	testing(ms, sampleSize, result);
 
-		std::cout << "*******\n1+1 with Mu+Lambda\n";
-		ms.setMode(MathSolver::MULAMBDA);
-		ms.setExactly(MathSolver::PLUS);
-		ms.setMu(1);
-		ms.setLambda(1);
-		testing(ms, sampleSize, result);*/
+	//	std::cout << "*******\n1+1 with Mu+Lambda\n";
+	//	ms.setMode(MathSolver::MULAMBDA);
+	//	ms.setExactly(MathSolver::PLUS);
+	//	ms.setMu(1);
+	//	ms.setLambda(1);
+	//	testing(ms, sampleSize, result);*/
 
-		std::cout << "*******\nMu+Lambda\n";
-		ms.setMode(MathSolver::MULAMBDA);
-		ms.setExactly(MathSolver::PLUS);
-		ms.setInheritance(MathSolver::NONE);
-		ms.setMu(10);
-		ms.setLambda(100);
-		testing(ms, sampleSize, result);
+	//	std::cout << "*******\nMu+Lambda\n";
+	//	ms.setMode(MathSolver::MULAMBDA);
+	//	ms.setExactly(MathSolver::PLUS);
+	//	ms.setInheritance(MathSolver::NONE);
+	//	ms.setMu(10);
+	//	ms.setLambda(100);
+	//	testing(ms, sampleSize, result);
 
-		/*std::cout << "*******\nMu,Lambda\n";
-		ms.setMode(MathSolver::MULAMBDA);
-		ms.setExactly(MathSolver::COMMA);
-		ms.setMu(10);
-		ms.setLambda(100);
-		testing(ms, sampleSize, result);
+	//	/*std::cout << "*******\nMu,Lambda\n";
+	//	ms.setMode(MathSolver::MULAMBDA);
+	//	ms.setExactly(MathSolver::COMMA);
+	//	ms.setMu(10);
+	//	ms.setLambda(100);
+	//	testing(ms, sampleSize, result);
 
-		std::cout << "*******\nMu,Lambda COMBINE\n";
-		ms.setMode(MathSolver::MULAMBDA);
-		ms.setExactly(MathSolver::COMMA);
-		ms.setInheritance(MathSolver::COMBINE);
-		ms.setMu(10);
-		ms.setLambda(100);
-		testing(ms, sampleSize, result);
+	//	std::cout << "*******\nMu,Lambda COMBINE\n";
+	//	ms.setMode(MathSolver::MULAMBDA);
+	//	ms.setExactly(MathSolver::COMMA);
+	//	ms.setInheritance(MathSolver::COMBINE);
+	//	ms.setMu(10);
+	//	ms.setLambda(100);
+	//	testing(ms, sampleSize, result);
 
-		std::cout << "*******\nMu,Lambda BLEND\n";
-		ms.setMode(MathSolver::MULAMBDA);
-		ms.setExactly(MathSolver::COMMA);
-		ms.setInheritance(MathSolver::BLEND);
-		ms.setMu(10);
-		ms.setLambda(100);
-		testing(ms, sampleSize, result);*/
+	//	std::cout << "*******\nMu,Lambda BLEND\n";
+	//	ms.setMode(MathSolver::MULAMBDA);
+	//	ms.setExactly(MathSolver::COMMA);
+	//	ms.setInheritance(MathSolver::BLEND);
+	//	ms.setMu(10);
+	//	ms.setLambda(100);
+	//	testing(ms, sampleSize, result);*/
 
-		std::cin.ignore();
-	}
+	//	std::cin.ignore();
+	//}
+
+	//NQueens
+	NQueens nq;
+	Queenome result = nq.Solve(8, 100, 10000);
+	std::cout << result << std::endl;
+	std::cin.ignore();
 }

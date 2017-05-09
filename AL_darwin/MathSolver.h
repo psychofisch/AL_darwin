@@ -46,7 +46,7 @@ public:
 	void setExactly(EXACTLY e);
 	void setInheritance(INHERIT i);
 	int Solve(Genome* output);
-	int Fitness(Genome& g1);
+	int Fitness(const Genome& g1);
 	void setSeed(const unsigned long seed);
 	void setMu(uint m);
 	void setLambda(uint l);

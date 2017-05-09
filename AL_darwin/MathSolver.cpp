@@ -102,7 +102,7 @@ int MathSolver::Solve(Genome* output)
 	return cnt;
 }
 
-int MathSolver::Fitness(Genome& g)
+int MathSolver::Fitness(const Genome& g)
 {
 	if (g.a == 0 && g.b == 0 && g.x == 0 && g.y == 0)
 		return INT_MAX;
