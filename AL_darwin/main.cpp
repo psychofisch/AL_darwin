@@ -13,10 +13,10 @@ std::ostream& operator<<(std::ostream& os, const Genome& g) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Queenome& q) {
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
 		os << q.data[i];
-		if (i < 3)
+		if (i < 7)
 			os << ", ";
 	}
 
@@ -55,9 +55,9 @@ int main(int argc, char* argv[])
 	ms.setLimit(100);
 
 	RNGesus rng;
-	//int sampleSize = 100;
-	//Genome result;
-	//Stopwatch watch;
+	/*int sampleSize = 100;
+	Genome result;
+	Stopwatch watch;*/
 
 	//while (1)
 	//{
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 
 	//	std::cout << "samplesize: " << sampleSize << std::endl;
 
-	//	/*std::cout << "*******\n1+1\n";
+	//	std::cout << "*******\n1+1\n";
 	//	watch.start();
 	//	ms.setMode(MathSolver::ONEPLUSONE);
 	//	testing(ms, sampleSize, result);
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 	//	ms.setExactly(MathSolver::PLUS);
 	//	ms.setMu(1);
 	//	ms.setLambda(1);
-	//	testing(ms, sampleSize, result);*/
+	//	testing(ms, sampleSize, result);
 
 	//	std::cout << "*******\nMu+Lambda\n";
 	//	ms.setMode(MathSolver::MULAMBDA);
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 	//	ms.setLambda(100);
 	//	testing(ms, sampleSize, result);
 
-	//	/*std::cout << "*******\nMu,Lambda\n";
+	//	std::cout << "*******\nMu,Lambda\n";
 	//	ms.setMode(MathSolver::MULAMBDA);
 	//	ms.setExactly(MathSolver::COMMA);
 	//	ms.setMu(10);
@@ -108,14 +108,19 @@ int main(int argc, char* argv[])
 	//	ms.setInheritance(MathSolver::BLEND);
 	//	ms.setMu(10);
 	//	ms.setLambda(100);
-	//	testing(ms, sampleSize, result);*/
+	//	testing(ms, sampleSize, result);
 
 	//	std::cin.ignore();
 	//}
 
 	//NQueens
 	NQueens nq;
-	Queenome result = nq.Solve(8, 100, 10000);
+	nq.setSeed(time(NULL));
+	Queenome result;
+	//result.data = { 5,0,1,6,3,7,2,4 };
+	int steps = nq.Solve(8, 100, 10000, &result);
 	std::cout << result << std::endl;
+	std::cout << nq.Fitness(result) << std::endl;
+	Kingdom::printQueenome(result);
 	std::cin.ignore();
 }
