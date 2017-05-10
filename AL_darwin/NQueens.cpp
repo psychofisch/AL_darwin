@@ -2,7 +2,8 @@
 
 
 
-NQueens::NQueens()
+NQueens::NQueens():
+	m_debug(false)
 {
 }
 
@@ -18,16 +19,21 @@ int NQueens::Solve(int boardSize, int populationSize, int iterationLimit, Queeno
 	int parents = int(populationSize * 0.1);
 	int children = populationSize - parents;
 
-	for (int i = 0; i < parents; ++i)
-	{
-		population[i] = getRandomQueenome(boardSize, boardSize);
-		population[i].fitness = Fitness(population[i]);
-	}
-
 	bool solution = false;
-	int cnt = 0;
+	int cnt = 0,
+		extinctions = 0;
 	for (int i = 0; i < iterationLimit; ++i)
 	{
+		if (i % int(iterationLimit * 0.2) == 0)
+		{
+			extinctions++;
+			for (int i = 0; i < parents; ++i)
+			{
+				population[i] = getRandomQueenome(boardSize, boardSize);
+				population[i].fitness = Fitness(population[i]);
+			}
+		}
+
 		i_genetics(population, parents, children, boardSize);
 		result = population[0];
 
@@ -39,10 +45,14 @@ int NQueens::Solve(int boardSize, int populationSize, int iterationLimit, Queeno
 		}
 	}
 
-	if (solution)
-		std::cout << "solution found in " << cnt << " steps!\n";
-	else
-		std::cout << "impossibru!\n";
+	if (m_debug)
+	{
+		if (solution)
+			std::cout << "solution found in " << cnt << " steps!\n";
+		else
+			std::cout << "impossibru!\n";
+		std::cout << "extinctions: " << extinctions << std::endl;
+	}
 
 	delete[] population;
 
@@ -80,6 +90,11 @@ void NQueens::setSeed(const unsigned long s)
 	m_rng.seed(s);
 }
 
+void NQueens::setDebug(bool d)
+{
+	m_debug = d;
+}
+
 Queenome NQueens::getRandomQueenome(uint limit, uint boardSize)
 {
 	Queenome q;
@@ -103,7 +118,7 @@ void NQueens::i_genetics(Queenome * population, int parents, int children, int b
 		tmpQueenome = population[r];
 		r = parents * m_rng.GetZeroToOne();
 		population[i] = i_combine(tmpQueenome, population[r]);
-		population[i] = i_mutate(population[i], 2);
+		population[i] = i_mutate(population[i], population[0].data.size());
 		population[i].fitness = Fitness(population[i]);
 	}
 
@@ -127,8 +142,15 @@ Queenome NQueens::i_mutate(Queenome & g, int margin)
 {
 	Queenome q = g;
 	size_t s = g.data.size();
+	int r = int(m_rng.GetZeroToOne() * s);
+	q.data[r] += int(m_rng.GetZeroToOne() * margin * 2 - margin);
 
-	for (uint i = 0; i < s; ++i)
+	if (q.data[r] < 0)
+		q.data[r] += s;
+	else if (q.data[r] > s - 1)
+		q.data[r] %= s;
+
+	/*for (uint i = 0; i < s; ++i)
 	{
 		q.data[i] += int(m_rng.GetZeroToOne() * margin * 2 - margin);
 
@@ -136,7 +158,7 @@ Queenome NQueens::i_mutate(Queenome & g, int margin)
 			q.data[i] += s;
 		else if (q.data[i] > s - 1)
 			q.data[i] %= s;
-	}
+	}*/
 
 	return q;
 }

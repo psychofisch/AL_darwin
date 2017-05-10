@@ -14,10 +14,10 @@ std::ostream& operator<<(std::ostream& os, const Genome& g) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Queenome& q) {
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < q.data.size(); ++i)
 	{
 		os << q.data[i];
-		if (i < 7)
+		if (i < q.data.size() - 1)
 			os << ", ";
 	}
 
@@ -150,16 +150,17 @@ int main(int argc, char* argv[])
 			break;
 	}
 
-	NQueens nq;
-	nq.setSeed(time(NULL));
+	NQueens* nq = new NQueens;
+	nq->setDebug(true);
+	nq->setSeed(time(NULL));
 	while (1)
 	{
 		//NQueens
 		Queenome result;
 		//result.data = { 5,0,1,6,3,7,2,4 };
-		int steps = nq.Solve(8, 100, 10000, &result);
+		int steps = nq->Solve(64, 1000, 1000, &result);
 		std::cout << result << std::endl;
-		std::cout << nq.Fitness(result) << std::endl;
+		std::cout << nq->Fitness(result) << std::endl;
 		Kingdom::printQueenome(result);
 		
 		char input[2];
@@ -168,4 +169,7 @@ int main(int argc, char* argv[])
 		if (input[0] == 'q')
 			break;
 	}
+
+	delete nq;
+	std::cin.ignore();
 }
