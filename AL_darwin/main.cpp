@@ -152,11 +152,10 @@ int main(int argc, char* argv[])
 	RNGesus rng;
 	ms.setSeed(seed);
 	Genome result;
-	Stopwatch watch;
 
 	while (1)
 	{
-		watch = Stopwatch();
+		Stopwatch watch;
 
 		std::cout << "samplesize: " << sampleSize << std::endl;
 
@@ -219,14 +218,19 @@ int main(int argc, char* argv[])
 	nq.setSeed(seed);
 	while (true)
 	{
+		Stopwatch watch;
 		//NQueens
 		Queenome result;
 		//result.data = { 5,0,1,6,3,7,2,4 };
+		watch.start();
 		int steps = nq.Solve(boardSize, populationSize, iterations, &result);
+		watch.stop();
 		std::cout << result << std::endl;
 		std::cout << nq.Fitness(result) << std::endl;
 		Kingdom::printQueenome(result);
 		
+		std::cout << "time: " << watch.getDurationString(0) << std::endl;
+
 		char input[2];
 		std::cin.getline(input, 2);
 		std::cin.clear();
