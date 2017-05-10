@@ -6,6 +6,8 @@
 #include "NQueens.h"
 #include "Stopwatch.h"
 
+#define DEBUG(x) std::cout << #x << ": " << x << std::endl;
+
 std::ostream& operator<<(std::ostream& os, const Genome& g) {
 	return os	/*<< "x: "*/ << g.x << ","
 		/*<< "y: "*/ << g.y << ","
@@ -78,15 +80,77 @@ void SaveQuality(const char * path, const char* prefix, int* data)
 
 int main(int argc, char* argv[])
 {
+	bool debug = false,
+		saveResults = false;
+	int sampleSize = 1,
+		populationSize = 1000,
+		mu = 10,
+		lambda = 100,
+		iterations = 10000,
+		startLimit = 100,
+		seed = time(NULL),
+		boardSize = 8;
+
+	for (int i = 1; i < argc; ++i)
+	{
+		if (strcmp(argv[i], "--debug") == 0)
+		{
+			debug = true;
+			std::cout << "DEBUG MODE ACTIVATED" << std::endl;
+		}
+		else if (strcmp(argv[i], "--samples") == 0)
+		{
+			sampleSize = atoi(argv[++i]);
+			if (debug)
+				DEBUG(sampleSize);
+		}
+		else if (strcmp(argv[i], "--population") == 0)
+		{
+			populationSize = atoi(argv[++i]);
+			if (debug)
+				DEBUG(populationSize);
+		}
+		else if (strcmp(argv[i], "--mulambda") == 0)
+		{
+			mu = atoi(argv[++i]);
+			lambda = atoi(argv[++i]);
+			if (debug)
+			{
+				DEBUG(mu);
+				DEBUG(lambda);
+			}
+		}
+		else if (strcmp(argv[i], "--limit") == 0)
+		{
+			startLimit = atoi(argv[++i]);
+			if (debug)
+				DEBUG(startLimit);
+		}
+		else if (strcmp(argv[i], "--seed") == 0)
+		{
+			seed = atoi(argv[++i]);
+			if (debug)
+				DEBUG(seed);
+		}
+		else if (strcmp(argv[i], "--board") == 0)
+		{
+			boardSize = atoi(argv[++i]);
+			if (debug)
+				DEBUG(boardSize);
+		}
+		if (strcmp(argv[i], "--save") == 0)
+		{
+			saveResults = true;
+			DEBUG(saveResults);
+		}
+	}
+
 	MathSolver ms;
-	ms.setDebug(false);
-	ms.setLimit(100);
-	bool saveResults = false;
+	ms.setDebug(debug);
+	ms.setLimit(startLimit);
 
 	RNGesus rng;
-	ms.setSeed(time(NULL));
-	ms.setSeed(2);
-	int sampleSize = 1;
+	ms.setSeed(seed);
 	Genome result;
 	Stopwatch watch;
 
@@ -107,8 +171,8 @@ int main(int argc, char* argv[])
 		ms.setMode(MathSolver::MULAMBDA);
 		ms.setExactly(MathSolver::PLUS);
 		ms.setInheritance(MathSolver::NONE);
-		ms.setMu(10);
-		ms.setLambda(100);
+		ms.setMu(mu);
+		ms.setLambda(lambda);
 		testing(ms, sampleSize, result);
 		if (saveResults)
 			SaveQuality("Mu+Lambda.csv", "MU+LAMBDA", ms.qualityCourse);
@@ -117,8 +181,8 @@ int main(int argc, char* argv[])
 		ms.setMode(MathSolver::MULAMBDA);
 		ms.setExactly(MathSolver::COMMA);
 		ms.setInheritance(MathSolver::NONE);
-		ms.setMu(10);
-		ms.setLambda(100);
+		ms.setMu(mu);
+		ms.setLambda(lambda);
 		testing(ms, sampleSize, result);
 		if (saveResults)
 			SaveQuality("MuCommaLambda.csv", "MUCOMMALAMBDA", ms.qualityCourse);
@@ -127,8 +191,8 @@ int main(int argc, char* argv[])
 		ms.setMode(MathSolver::MULAMBDA);
 		ms.setExactly(MathSolver::COMMA);
 		ms.setInheritance(MathSolver::COMBINE);
-		ms.setMu(10);
-		ms.setLambda(100);
+		ms.setMu(mu);
+		ms.setLambda(lambda);
 		testing(ms, sampleSize, result);
 		if (saveResults)
 			SaveQuality("MuCommaLambdaCombine.csv", "MUCOMMALAMBDA with COMBINE", ms.qualityCourse);
@@ -137,8 +201,8 @@ int main(int argc, char* argv[])
 		ms.setMode(MathSolver::MULAMBDA);
 		ms.setExactly(MathSolver::COMMA);
 		ms.setInheritance(MathSolver::BLEND);
-		ms.setMu(10);
-		ms.setLambda(100);
+		ms.setMu(mu);
+		ms.setLambda(lambda);
 		testing(ms, sampleSize, result);
 		if (saveResults)
 			SaveQuality("MuCommaLambdaBlend.csv", "MUCOMMALAMBDA with BLEND", ms.qualityCourse);
@@ -150,17 +214,17 @@ int main(int argc, char* argv[])
 			break;
 	}
 
-	NQueens* nq = new NQueens;
-	nq->setDebug(true);
-	nq->setSeed(time(NULL));
-	while (1)
+	NQueens nq;
+	nq.setDebug(debug);
+	nq.setSeed(seed);
+	while (true)
 	{
 		//NQueens
 		Queenome result;
 		//result.data = { 5,0,1,6,3,7,2,4 };
-		int steps = nq->Solve(64, 1000, 1000, &result);
+		int steps = nq.Solve(boardSize, populationSize, iterations, &result);
 		std::cout << result << std::endl;
-		std::cout << nq->Fitness(result) << std::endl;
+		std::cout << nq.Fitness(result) << std::endl;
 		Kingdom::printQueenome(result);
 		
 		char input[2];
@@ -169,7 +233,4 @@ int main(int argc, char* argv[])
 		if (input[0] == 'q')
 			break;
 	}
-
-	delete nq;
-	std::cin.ignore();
 }
