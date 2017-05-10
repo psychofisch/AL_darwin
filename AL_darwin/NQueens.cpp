@@ -21,15 +21,13 @@ int NQueens::Solve(int boardSize, int populationSize, int iterationLimit, Queeno
 	for (int i = 0; i < parents; ++i)
 	{
 		population[i] = getRandomQueenome(boardSize, boardSize);
+		population[i].fitness = Fitness(population[i]);
 	}
 
 	bool solution = false;
 	int cnt = 0;
 	for (int i = 0; i < iterationLimit; ++i)
 	{
-		/*if (i == 16)
-			__debugbreak();*/
-
 		i_genetics(population, parents, children, boardSize);
 		result = population[0];
 
@@ -109,7 +107,9 @@ void NQueens::i_genetics(Queenome * population, int parents, int children, int b
 		population[i].fitness = Fitness(population[i]);
 	}
 
-	std::qsort(population, parents + children, sizeof(Queenome), Kingdom::QueenCompare);
+	std::qsort(population/* + parents*/, children, sizeof(Queenome), Kingdom::QueenCompare);
+
+	//memcpy(population, population + parents, sizeof(Queenome) * parents);
 }
 
 Queenome NQueens::i_combine(const Queenome & qLeft, const Queenome & qRight)

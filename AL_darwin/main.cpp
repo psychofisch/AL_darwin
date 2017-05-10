@@ -55,9 +55,9 @@ int main(int argc, char* argv[])
 	ms.setLimit(100);
 
 	RNGesus rng;
-	/*int sampleSize = 100;
-	Genome result;
-	Stopwatch watch;*/
+	//int sampleSize = 100;
+	//Genome result;
+	//Stopwatch watch;
 
 	//while (1)
 	//{
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 
 	//	std::cout << "samplesize: " << sampleSize << std::endl;
 
-	//	std::cout << "*******\n1+1\n";
+	//	/*std::cout << "*******\n1+1\n";
 	//	watch.start();
 	//	ms.setMode(MathSolver::ONEPLUSONE);
 	//	testing(ms, sampleSize, result);
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 	//	ms.setInheritance(MathSolver::NONE);
 	//	ms.setMu(10);
 	//	ms.setLambda(100);
-	//	testing(ms, sampleSize, result);
+	//	testing(ms, sampleSize, result);*/
 
 	//	std::cout << "*******\nMu,Lambda\n";
 	//	ms.setMode(MathSolver::MULAMBDA);
@@ -113,14 +113,17 @@ int main(int argc, char* argv[])
 	//	std::cin.ignore();
 	//}
 
-	//NQueens
 	NQueens nq;
 	nq.setSeed(time(NULL));
-	Queenome result;
-	//result.data = { 5,0,1,6,3,7,2,4 };
-	int steps = nq.Solve(8, 100, 10000, &result);
-	std::cout << result << std::endl;
-	std::cout << nq.Fitness(result) << std::endl;
-	Kingdom::printQueenome(result);
-	std::cin.ignore();
+	while (1)
+	{
+		//NQueens
+		Queenome result;
+		//result.data = { 5,0,1,6,3,7,2,4 };
+		int steps = nq.Solve(8, 100, 10000, &result);
+		std::cout << result << std::endl;
+		std::cout << nq.Fitness(result) << std::endl;
+		Kingdom::printQueenome(result);
+		std::cin.ignore();
+	}
 }

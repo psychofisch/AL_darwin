@@ -8,8 +8,12 @@
 typedef unsigned int uint;
 
 struct Queenome {
+	Queenome():
+		fitness(INT_MAX)
+	{}
+
 	std::vector<int> data;
-	int fitness = INT_MAX;
+	int fitness;
 };
 
 namespace Kingdom {
