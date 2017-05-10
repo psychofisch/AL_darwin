@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
 	MathSolver ms;
 	ms.setDebug(false);
 	ms.setLimit(100);
+	bool saveResults = false;
 
 	RNGesus rng;
 	ms.setSeed(time(NULL));
@@ -99,15 +100,8 @@ int main(int argc, char* argv[])
 		watch.start();
 		ms.setMode(MathSolver::ONEPLUSONE);
 		testing(ms, sampleSize, result);
-		SaveQuality("1+1.csv", "1+1", ms.qualityCourse);
-
-		std::cout << "*******\n1+1 with Mu+Lambda\n";
-		ms.setMode(MathSolver::MULAMBDA);
-		ms.setExactly(MathSolver::PLUS);
-		ms.setMu(1);
-		ms.setLambda(1);
-		testing(ms, sampleSize, result);
-		SaveQuality("1+1_MULAMBDA.csv", "1+1_MULAMBDA", ms.qualityCourse);
+		if(saveResults)
+			SaveQuality("1+1.csv", "1+1", ms.qualityCourse);
 
 		std::cout << "*******\nMu+Lambda\n";
 		ms.setMode(MathSolver::MULAMBDA);
@@ -116,7 +110,8 @@ int main(int argc, char* argv[])
 		ms.setMu(10);
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
-		SaveQuality("MU+LAMBDA.csv", "MU+LAMBDA", ms.qualityCourse);
+		if (saveResults)
+			SaveQuality("Mu+Lambda.csv", "MU+LAMBDA", ms.qualityCourse);
 
 		std::cout << "*******\nMu,Lambda\n";
 		ms.setMode(MathSolver::MULAMBDA);
@@ -125,7 +120,8 @@ int main(int argc, char* argv[])
 		ms.setMu(10);
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
-		SaveQuality("MuCommaLambda.csv", "MUCOMMALAMBDA", ms.qualityCourse);
+		if (saveResults)
+			SaveQuality("MuCommaLambda.csv", "MUCOMMALAMBDA", ms.qualityCourse);
 
 		std::cout << "*******\nMu,Lambda COMBINE\n";
 		ms.setMode(MathSolver::MULAMBDA);
@@ -134,7 +130,8 @@ int main(int argc, char* argv[])
 		ms.setMu(10);
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
-		SaveQuality("MuCommaLambdaCombine.csv", "MUCOMMALAMBDA with COMBINE", ms.qualityCourse);
+		if (saveResults)
+			SaveQuality("MuCommaLambdaCombine.csv", "MUCOMMALAMBDA with COMBINE", ms.qualityCourse);
 
 		std::cout << "*******\nMu,Lambda BLEND\n";
 		ms.setMode(MathSolver::MULAMBDA);
@@ -143,22 +140,32 @@ int main(int argc, char* argv[])
 		ms.setMu(10);
 		ms.setLambda(100);
 		testing(ms, sampleSize, result);
-		SaveQuality("MuCommaLambdaBlend.csv", "MUCOMMALAMBDA with BLEND", ms.qualityCourse);
+		if (saveResults)
+			SaveQuality("MuCommaLambdaBlend.csv", "MUCOMMALAMBDA with BLEND", ms.qualityCourse);
 
-		std::cin.ignore();
+		char input[2];
+		std::cin.getline(input, 2);
+		std::cin.clear();
+		if (input[0] == 'q')
+			break;
 	}
 
-	//NQueens nq;
-	//nq.setSeed(time(NULL));
-	//while (1)
-	//{
-	//	//NQueens
-	//	Queenome result;
-	//	//result.data = { 5,0,1,6,3,7,2,4 };
-	//	int steps = nq.Solve(8, 100, 10000, &result);
-	//	std::cout << result << std::endl;
-	//	std::cout << nq.Fitness(result) << std::endl;
-	//	Kingdom::printQueenome(result);
-	//	std::cin.ignore();
-	//}
+	NQueens nq;
+	nq.setSeed(time(NULL));
+	while (1)
+	{
+		//NQueens
+		Queenome result;
+		//result.data = { 5,0,1,6,3,7,2,4 };
+		int steps = nq.Solve(8, 100, 10000, &result);
+		std::cout << result << std::endl;
+		std::cout << nq.Fitness(result) << std::endl;
+		Kingdom::printQueenome(result);
+		
+		char input[2];
+		std::cin.getline(input, 2);
+		std::cin.clear();
+		if (input[0] == 'q')
+			break;
+	}
 }

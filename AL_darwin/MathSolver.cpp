@@ -40,7 +40,8 @@ void MathSolver::setInheritance(INHERIT i)
 
 int MathSolver::Solve(Genome* output)
 {
-	m_rng = RNGesus();
+	if(m_debug)
+		m_rng = RNGesus();
 
 	Genome result;
 	Genome* population = nullptr;
@@ -84,7 +85,6 @@ int MathSolver::Solve(Genome* output)
 			i_muLambda(population, mutateParam);
 
 			result = population[0];
-
 		}
 
 		qualityCourse[i] = result.fitness;
@@ -163,20 +163,17 @@ Genome MathSolver::getRandomGenome(uint limit)
 
 Genome MathSolver::i_onePlusOne(const Genome& g, int mutateParam)
 {
-	Genome child[2] = { g, g };
+	Genome child, parent = g;
 
-	for (int i = 0; i < 2; ++i)
-	{
-		child[i] = i_mutateWith(child[i], mutateParam);
+	child = i_mutateWith(parent, mutateParam);
 
-		if(child[i].a > child[i].b)	//solution requirement: a > b 
-			child[i].fitness = Fitness(child[i]);
-	}
+	if(child.a > child.b)	//solution requirement: a > b 
+		child.fitness = Fitness(child);
 
-	if (child[0].fitness < child[1].fitness)
-		return child[0];
+	if (parent.fitness < child.fitness)
+		return parent;
 	else
-		return child[1];
+		return child;
 }
 
 void MathSolver::i_muLambda(Genome * population, int mutateParam)
@@ -203,7 +200,7 @@ void MathSolver::i_muLambda(Genome * population, int mutateParam)
 
 		tmpGenome = i_mutateWith(tmpGenome, mutateParam);
 
-		if (tmpGenome.a >tmpGenome.b)
+		if (tmpGenome.a > tmpGenome.b)
 			tmpGenome.fitness = Fitness(tmpGenome);
 
 		population[i] = tmpGenome;
