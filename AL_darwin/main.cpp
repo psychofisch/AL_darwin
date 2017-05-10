@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include <fstream>
 
 #include "MathSolver.h"
 #include "NQueens.h"
@@ -48,6 +49,33 @@ void testing(MathSolver& ms, int sampleSize, Genome& result)
 	std::cout << "*******\n";
 }
 
+void SaveQuality(const char * path, const char* prefix, int* data)
+{
+	std::ofstream file;
+	file.open(path);
+
+	if (!file.is_open())
+	{
+		std::cout << "Failed to open file: " << path << std::endl;
+		return;
+	}
+
+	file << prefix << std::endl;
+
+	for (uint i = 0; i < 10000; ++i)
+	{
+		if(data[i] >= 0)
+			file << data[i] << std::endl;
+		
+		if (data[i] <= 0)
+			break;
+	}
+
+	file << std::endl;
+
+	file.close();
+}
+
 int main(int argc, char* argv[])
 {
 	MathSolver ms;
@@ -55,75 +83,82 @@ int main(int argc, char* argv[])
 	ms.setLimit(100);
 
 	RNGesus rng;
-	//int sampleSize = 100;
-	//Genome result;
-	//Stopwatch watch;
+	ms.setSeed(time(NULL));
+	ms.setSeed(2);
+	int sampleSize = 1;
+	Genome result;
+	Stopwatch watch;
 
-	//while (1)
-	//{
-	//	watch = Stopwatch();
-	//	//ms.setSeed(time(NULL));
-	//	ms.setSeed(2);
-
-	//	std::cout << "samplesize: " << sampleSize << std::endl;
-
-	//	/*std::cout << "*******\n1+1\n";
-	//	watch.start();
-	//	ms.setMode(MathSolver::ONEPLUSONE);
-	//	testing(ms, sampleSize, result);
-
-	//	std::cout << "*******\n1+1 with Mu+Lambda\n";
-	//	ms.setMode(MathSolver::MULAMBDA);
-	//	ms.setExactly(MathSolver::PLUS);
-	//	ms.setMu(1);
-	//	ms.setLambda(1);
-	//	testing(ms, sampleSize, result);
-
-	//	std::cout << "*******\nMu+Lambda\n";
-	//	ms.setMode(MathSolver::MULAMBDA);
-	//	ms.setExactly(MathSolver::PLUS);
-	//	ms.setInheritance(MathSolver::NONE);
-	//	ms.setMu(10);
-	//	ms.setLambda(100);
-	//	testing(ms, sampleSize, result);*/
-
-	//	std::cout << "*******\nMu,Lambda\n";
-	//	ms.setMode(MathSolver::MULAMBDA);
-	//	ms.setExactly(MathSolver::COMMA);
-	//	ms.setMu(10);
-	//	ms.setLambda(100);
-	//	testing(ms, sampleSize, result);
-
-	//	std::cout << "*******\nMu,Lambda COMBINE\n";
-	//	ms.setMode(MathSolver::MULAMBDA);
-	//	ms.setExactly(MathSolver::COMMA);
-	//	ms.setInheritance(MathSolver::COMBINE);
-	//	ms.setMu(10);
-	//	ms.setLambda(100);
-	//	testing(ms, sampleSize, result);
-
-	//	std::cout << "*******\nMu,Lambda BLEND\n";
-	//	ms.setMode(MathSolver::MULAMBDA);
-	//	ms.setExactly(MathSolver::COMMA);
-	//	ms.setInheritance(MathSolver::BLEND);
-	//	ms.setMu(10);
-	//	ms.setLambda(100);
-	//	testing(ms, sampleSize, result);
-
-	//	std::cin.ignore();
-	//}
-
-	NQueens nq;
-	nq.setSeed(time(NULL));
 	while (1)
 	{
-		//NQueens
-		Queenome result;
-		//result.data = { 5,0,1,6,3,7,2,4 };
-		int steps = nq.Solve(8, 100, 10000, &result);
-		std::cout << result << std::endl;
-		std::cout << nq.Fitness(result) << std::endl;
-		Kingdom::printQueenome(result);
+		watch = Stopwatch();
+
+		std::cout << "samplesize: " << sampleSize << std::endl;
+
+		std::cout << "*******\n1+1\n";
+		watch.start();
+		ms.setMode(MathSolver::ONEPLUSONE);
+		testing(ms, sampleSize, result);
+		SaveQuality("1+1.csv", "1+1", ms.qualityCourse);
+
+		std::cout << "*******\n1+1 with Mu+Lambda\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::PLUS);
+		ms.setMu(1);
+		ms.setLambda(1);
+		testing(ms, sampleSize, result);
+		SaveQuality("1+1_MULAMBDA.csv", "1+1_MULAMBDA", ms.qualityCourse);
+
+		std::cout << "*******\nMu+Lambda\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::PLUS);
+		ms.setInheritance(MathSolver::NONE);
+		ms.setMu(10);
+		ms.setLambda(100);
+		testing(ms, sampleSize, result);
+		SaveQuality("MU+LAMBDA.csv", "MU+LAMBDA", ms.qualityCourse);
+
+		std::cout << "*******\nMu,Lambda\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::COMMA);
+		ms.setInheritance(MathSolver::NONE);
+		ms.setMu(10);
+		ms.setLambda(100);
+		testing(ms, sampleSize, result);
+		SaveQuality("MuCommaLambda.csv", "MUCOMMALAMBDA", ms.qualityCourse);
+
+		std::cout << "*******\nMu,Lambda COMBINE\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::COMMA);
+		ms.setInheritance(MathSolver::COMBINE);
+		ms.setMu(10);
+		ms.setLambda(100);
+		testing(ms, sampleSize, result);
+		SaveQuality("MuCommaLambdaCombine.csv", "MUCOMMALAMBDA with COMBINE", ms.qualityCourse);
+
+		std::cout << "*******\nMu,Lambda BLEND\n";
+		ms.setMode(MathSolver::MULAMBDA);
+		ms.setExactly(MathSolver::COMMA);
+		ms.setInheritance(MathSolver::BLEND);
+		ms.setMu(10);
+		ms.setLambda(100);
+		testing(ms, sampleSize, result);
+		SaveQuality("MuCommaLambdaBlend.csv", "MUCOMMALAMBDA with BLEND", ms.qualityCourse);
+
 		std::cin.ignore();
 	}
+
+	//NQueens nq;
+	//nq.setSeed(time(NULL));
+	//while (1)
+	//{
+	//	//NQueens
+	//	Queenome result;
+	//	//result.data = { 5,0,1,6,3,7,2,4 };
+	//	int steps = nq.Solve(8, 100, 10000, &result);
+	//	std::cout << result << std::endl;
+	//	std::cout << nq.Fitness(result) << std::endl;
+	//	Kingdom::printQueenome(result);
+	//	std::cin.ignore();
+	//}
 }

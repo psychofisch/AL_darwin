@@ -13,12 +13,14 @@ MathSolver::MathSolver(MODE m)
 	m_lambda(10),
 	m_limit(100),
 	m_exact(PLUS),
-	m_inherit(NONE)
+	m_inherit(NONE),
+	qualityCourse(nullptr)
 {
 }
 
 MathSolver::~MathSolver()
 {
+	delete[] qualityCourse;
 }
 
 void MathSolver::setMode(MODE m)
@@ -38,8 +40,17 @@ void MathSolver::setInheritance(INHERIT i)
 
 int MathSolver::Solve(Genome* output)
 {
+	m_rng = RNGesus();
+
 	Genome result;
 	Genome* population = nullptr;
+
+	delete[] qualityCourse;
+	qualityCourse = new int[m_iterationLimit];
+	for (int i = 0; i < m_iterationLimit; ++i)
+	{
+		qualityCourse[i] = -1;
+	}
 
 	bool solution = false;
 	int mutateParam = m_limit;
@@ -70,17 +81,13 @@ int MathSolver::Solve(Genome* output)
 				}
 			}
 
-			//int mutateParam = std::round(float(m_limit) *(1.0 - (i / m_iterationLimit)));
-			//if(m_mode == MUPLUSLAMBDA)
-			//	i_muPlusLambda(population, mutateParam);
-			//else
-				i_muLambda(population, mutateParam);
+			i_muLambda(population, mutateParam);
 
 			result = population[0];
 
-			if (i > 9990 && (result.fitness > 0 && result.fitness < 2))
-				continue;
 		}
+
+		qualityCourse[i] = result.fitness;
 
 		if (result.fitness == 0)
 		{
@@ -180,15 +187,15 @@ void MathSolver::i_muLambda(Genome * population, int mutateParam)
 		uint r = int(m_mu * m_rng.GetZeroToOne());
 
 		tmpGenome = population[r];
-		if (m_exact != NONE)
+		if (m_inherit != NONE)
 		{
 			tmpGenome = population[r];
 			r = int(m_mu * m_rng.GetZeroToOne());
-			if (m_exact == COMBINE)
+			if (m_inherit == COMBINE)
 			{
 				tmpGenome = i_combine(tmpGenome, population[r]);
 			}
-			else if (m_exact == BLEND)
+			else if (m_inherit == BLEND)
 			{
 				tmpGenome = i_blend(tmpGenome, population[r]);
 			}

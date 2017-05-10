@@ -55,6 +55,8 @@ public:
 
 	Genome getRandomGenome(uint limit);
 
+	int* qualityCourse;
+
 private:
 	MODE m_mode;
 	EXACTLY m_exact;
