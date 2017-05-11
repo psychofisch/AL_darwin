@@ -1,0 +1,42 @@
+AL_darwin
+----------
+
+Startparameter
+---------------
+Alle Parameter beginnen mit "--".
+
+debug		- aktiviert zusätzliche Konsolenausgaben
+seed <int>	- Seed für den RNG (default: time(NULL))
+
+	MathSolver
+	----------
+	samples	<int>			- erhöht die Anzahl der Durchläufe pro Test (jede Strategie wird öfter getestet)
+	mulambda <int> <int>	- erwartet 2 Parameter hintereinander (--mulambda <mu> <lambda>)
+	limit <int>				- gibt ± die Varianz der Startpopulation an (zB limit = 100 bedeutet xyab werden mit ±100 initialisiert)
+	save					- aktiviert die Speicherung der Güteverläufe (VORSICHT: überschreibt alle vorhandenen Daten)	
+	
+	Queensproblem
+	-------------
+	population <int>	- Größe der Population (mu:lambda ist fix mit 1:10)
+	board <int>			- Größe des Boards (Vorsicht mit Werten > 100)
+	
+MathSolver
+----------
+Alle möglichen Strategien werden nacheinander getestet.
+
+Queensproblem
+-------------
+Mu+Lambda mit 2-Eltern-Kombination und Mutation
+	
+Güteverläufe
+------------
+Aufgrund der zufällig erstellen Startpopulation sowie dem randomisierten Mutieren
+unterliegen die Güteverläufe starken Schwankungen. Die beiliegenden Diagramme sind keine Mittelwerte und
+repräsentieren nur ein Beispiel. Jedoch haben Tests gezeigt, dass die gezeigten Verläufen im Groben dem
+Durchschnitt entspricht.
+<siehe beiliegende PNGs>
+
+Autor
+-----
+Thomas Fischer
+gs16m022
