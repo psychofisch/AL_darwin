@@ -37,6 +37,9 @@ int NQueens::Solve(int boardSize, int populationSize, int iterationLimit, Queeno
 		i_genetics(population, parents, children, boardSize);
 		result = population[0];
 
+		if (result.data[0] < 0 || result.data[boardSize - 1] > boardSize)
+			continue;
+
 		if (result.fitness == 0)
 		{
 			solution = true;
@@ -54,7 +57,7 @@ int NQueens::Solve(int boardSize, int populationSize, int iterationLimit, Queeno
 		std::cout << "extinctions: " << extinctions << std::endl;
 	}
 
-	//delete[] population;
+	delete[] population;
 
 	if(output != nullptr)
 		*output = result;
@@ -124,7 +127,12 @@ void NQueens::i_genetics(Queenome * population, int parents, int children, int b
 
 	std::qsort(population + parents, children, sizeof(Queenome), Kingdom::QueenCompare);
 
-	memcpy(population, population + parents, sizeof(Queenome) * parents);
+	//memcpy(population, population + parents, sizeof(Queenome) * parents);
+
+	for (int i = 0; i < parents; ++i)
+	{
+		population[i] = population[parents + i];
+	}
 }
 
 Queenome NQueens::i_combine(const Queenome & qLeft, const Queenome & qRight)
@@ -148,7 +156,7 @@ Queenome NQueens::i_mutate(Queenome & g, int margin)
 	if (q.data[r] < 0)
 		q.data[r] += s;
 	else if (q.data[r] > s - 1)
-		q.data[r] %= s;
+		q.data[r] -= s;
 
 	/*for (uint i = 0; i < s; ++i)
 	{
