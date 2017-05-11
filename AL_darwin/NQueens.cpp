@@ -54,7 +54,7 @@ int NQueens::Solve(int boardSize, int populationSize, int iterationLimit, Queeno
 		std::cout << "extinctions: " << extinctions << std::endl;
 	}
 
-	delete[] population;
+	//delete[] population;
 
 	if(output != nullptr)
 		*output = result;
@@ -122,9 +122,9 @@ void NQueens::i_genetics(Queenome * population, int parents, int children, int b
 		population[i].fitness = Fitness(population[i]);
 	}
 
-	std::qsort(population/* + parents*/, children, sizeof(Queenome), Kingdom::QueenCompare);
+	std::qsort(population + parents, children, sizeof(Queenome), Kingdom::QueenCompare);
 
-	//memcpy(population, population + parents, sizeof(Queenome) * parents);
+	memcpy(population, population + parents, sizeof(Queenome) * parents);
 }
 
 Queenome NQueens::i_combine(const Queenome & qLeft, const Queenome & qRight)
