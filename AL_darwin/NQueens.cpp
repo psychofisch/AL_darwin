@@ -185,17 +185,19 @@ void Kingdom::printQueenome(const Queenome& q)
 {
 	for (int i = 0; i < q.data.size(); ++i)
 	{
-		for (int j = 0; j < q.data.size(); ++j)
-		{
-			//if(j % 3 != 1)
-			if (q.data[i] == j)
-				std::cout << "D";
-			else if((j % 2 == 0 && i % 2 == 0) ||
-				j % 2 == 1 && i % 2 == 1)
-				std::cout << "#";
-			else// if (j % 2 == 1)
-				std::cout << " ";
-		}
+		//if (i % 2 == 0)
+			for (int j = 0; j < q.data.size(); ++j)
+			{
+				//if(j % 3 != 1)
+				if (q.data[i] == j)
+					std::cout << "D";
+				else if((j % 2 == 0 && i % 2 == 0) ||
+					j % 2 == 1 && i % 2 == 1)
+					std::cout << "#";
+				else// if (j % 2 == 1)
+					std::cout << " ";
+				//std::cout << " ";
+			}
 		std::cout << std::endl;
 	}
 }

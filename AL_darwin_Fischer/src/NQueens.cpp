@@ -37,6 +37,9 @@ int NQueens::Solve(int boardSize, int populationSize, int iterationLimit, Queeno
 		i_genetics(population, parents, children, boardSize);
 		result = population[0];
 
+		if (result.data[0] < 0 || result.data[boardSize - 1] > boardSize)
+			continue;
+
 		if (result.fitness == 0)
 		{
 			solution = true;
@@ -122,9 +125,14 @@ void NQueens::i_genetics(Queenome * population, int parents, int children, int b
 		population[i].fitness = Fitness(population[i]);
 	}
 
-	std::qsort(population/* + parents*/, children, sizeof(Queenome), Kingdom::QueenCompare);
+	std::qsort(population + parents, children, sizeof(Queenome), Kingdom::QueenCompare);
 
 	//memcpy(population, population + parents, sizeof(Queenome) * parents);
+
+	for (int i = 0; i < parents; ++i)
+	{
+		population[i] = population[parents + i];
+	}
 }
 
 Queenome NQueens::i_combine(const Queenome & qLeft, const Queenome & qRight)
@@ -132,6 +140,7 @@ Queenome NQueens::i_combine(const Queenome & qLeft, const Queenome & qRight)
 	Queenome result = qLeft;
 	int r = m_rng.GetZeroToOne() * qLeft.data.size();
 
+	//memcpy(&result.data[0], &qLeft.data[0], r * sizeof(int));
 	memcpy(&(result.data[r]), &(qRight.data[r]), (qLeft.data.size() - r) * sizeof(int));
 
 	return result;
@@ -147,7 +156,7 @@ Queenome NQueens::i_mutate(Queenome & g, int margin)
 	if (q.data[r] < 0)
 		q.data[r] += s;
 	else if (q.data[r] > s - 1)
-		q.data[r] %= s;
+		q.data[r] -= s;
 
 	/*for (uint i = 0; i < s; ++i)
 	{
@@ -176,16 +185,19 @@ void Kingdom::printQueenome(const Queenome& q)
 {
 	for (int i = 0; i < q.data.size(); ++i)
 	{
-		for (int j = 0; j < q.data.size(); ++j)
-		{
-			if (q.data[i] == j)
-				std::cout << "D";
-			else if((j % 2 == 0 && i % 2 == 0) ||
-				j % 2 == 1 && i % 2 == 1)
-				std::cout << "#";
-			else
-				std::cout << " ";
-		}
+		//if (i % 2 == 0)
+			for (int j = 0; j < q.data.size(); ++j)
+			{
+				//if(j % 3 != 1)
+				if (q.data[i] == j)
+					std::cout << "D";
+				else if((j % 2 == 0 && i % 2 == 0) ||
+					j % 2 == 1 && i % 2 == 1)
+					std::cout << "#";
+				else// if (j % 2 == 1)
+					std::cout << " ";
+				//std::cout << " ";
+			}
 		std::cout << std::endl;
 	}
 }

@@ -9,19 +9,21 @@
 #define DEBUG(x) std::cout << #x << ": " << x << std::endl;
 
 std::ostream& operator<<(std::ostream& os, const Genome& g) {
-	return os	/*<< "x: "*/ << g.x << ","
+	return os << "<"	/*<< "x: "*/ << g.x << ","
 		/*<< "y: "*/ << g.y << ","
 		/*<< "a: "*/ << g.a << ","
-		/*<< "b:" */ << g.b;
+		/*<< "b:" */ << g.b << ">";
 }
 
 std::ostream& operator<<(std::ostream& os, const Queenome& q) {
+	os << "<";
 	for (int i = 0; i < q.data.size(); ++i)
 	{
 		os << q.data[i];
 		if (i < q.data.size() - 1)
 			os << ", ";
 	}
+	os << ">";
 
 	return os;
 }
@@ -155,6 +157,7 @@ int main(int argc, char* argv[])
 
 	while (1)
 	{
+		std::cout << "calculating...pls wait...\n";
 		Stopwatch watch;
 
 		std::cout << "samplesize: " << sampleSize << std::endl;
@@ -206,6 +209,7 @@ int main(int argc, char* argv[])
 		if (saveResults)
 			SaveQuality("MuCommaLambdaBlend.csv", "MUCOMMALAMBDA with BLEND", ms.qualityCourse);
 
+		std::cout << "press ENTER to repeat or type \"q\" and press ENTER to get to the Queens Problem...\n";
 		char input[2];
 		std::cin.getline(input, 2);
 		std::cin.clear();
@@ -218,6 +222,7 @@ int main(int argc, char* argv[])
 	nq.setSeed(seed);
 	while (true)
 	{
+		std::cout << "calculating...pls wait...\n";
 		Stopwatch watch;
 		//NQueens
 		Queenome result;
@@ -231,6 +236,7 @@ int main(int argc, char* argv[])
 		
 		std::cout << "time: " << watch.getDurationString(0) << std::endl;
 
+		std::cout << "press ENTER to repeat or type \"q\" and press ENTER to get close the application...\n";
 		char input[2];
 		std::cin.getline(input, 2);
 		std::cin.clear();

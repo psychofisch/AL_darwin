@@ -69,6 +69,7 @@ private:
 	bool m_debug;
 
 	Genome i_onePlusOne(const Genome& g, int mutateParam);
+	//void i_muPlusLambda(Genome* g, int mutateParam);
 	void i_muLambda(Genome* g, int mutateParam);
 	Genome i_mutate(Genome& g);
 	Genome i_mutateWith(Genome& g, int margin);

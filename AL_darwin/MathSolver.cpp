@@ -48,7 +48,7 @@ int MathSolver::Solve(Genome* output)
 
 	delete[] qualityCourse;
 	qualityCourse = new int[m_iterationLimit];
-	for (int i = 0; i < m_iterationLimit; ++i)
+	for (uint i = 0; i < m_iterationLimit; ++i)
 	{
 		qualityCourse[i] = -1;
 	}
@@ -56,7 +56,7 @@ int MathSolver::Solve(Genome* output)
 	bool solution = false;
 	int mutateParam = m_limit;
 	int cnt = 0;
-	for(int i = 0; i < m_iterationLimit; ++i)
+	for(uint i = 0; i < m_iterationLimit; ++i)
 	{
 		/*if (mutateParam > 10)
 			mutateParam /= 2;
@@ -273,4 +273,6 @@ int Math::GenomeCompare(const void * lhs, const void * rhs)
 		return 0;
 	if ((*(Genome*)lhs).fitness >  (*(Genome*)rhs).fitness)
 		return 1;
+
+	return INT_MAX;
 }

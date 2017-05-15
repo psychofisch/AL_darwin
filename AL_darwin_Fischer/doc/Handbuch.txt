@@ -19,12 +19,12 @@ seed <int>	- Seed für den RNG (default: time(NULL))
 	-------------
 	population <int>	- Größe der Population (mu:lambda ist fix mit 1:10)
 	board <int>			- Größe des Boards (Vorsicht mit Werten > 100)
-	
+
 MathSolver
 ----------
 Alle möglichen Strategien werden nacheinander getestet.
 
-Queensproblem
+NQueensproblem
 -------------
 Mu+Lambda mit 2-Eltern-Kombination und Mutation
 	
