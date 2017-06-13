@@ -115,6 +115,7 @@ void NQueens::i_genetics(Queenome * population, int parents, int children, int b
 {
 	Queenome tmpQueenome;
 
+#pragma omp parallel for private(tmpQueenome)
 	for (int i = parents; i < children + parents; ++i)
 	{
 		int r = parents * m_rng.GetZeroToOne();

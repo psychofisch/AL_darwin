@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
 	ms.setSeed(seed);
 	Genome result;
 
-	while (1)
+	while (0)
 	{
 		std::cout << "calculating...pls wait...\n";
 		Stopwatch watch;
@@ -232,7 +232,7 @@ int main(int argc, char* argv[])
 		watch.stop();
 		std::cout << result << std::endl;
 		std::cout << nq.Fitness(result) << std::endl;
-		Kingdom::printQueenome(result);
+		//Kingdom::printQueenome(result);
 		
 		std::cout << "time: " << watch.getDurationString(0) << std::endl;
 
