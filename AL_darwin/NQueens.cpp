@@ -78,6 +78,7 @@ int NQueens::Fitness(const Queenome & q)
 				continue;
 
 			if (q.data[i] == q.data[j]
+				//|| fabsf(i - j) == fabsf(q.data[i] - q.data[j]) <- is slower...
 				|| (q.data[i] == q.data[j] - i + j)
 				|| (q.data[i] == q.data[j] + i - j)
 				)
